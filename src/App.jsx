@@ -529,9 +529,9 @@ function HeroScreen({ onEnter }) {
                             opacity: showButton ? 1 : 0,
                             scale: showButton ? [1, 1.05, 1] : 1,
                             boxShadow: showButton ? [
-                                "0 0 20px rgba(255, 105, 180, 0.4)",
-                                "0 0 40px rgba(189, 89, 242, 0.4)",
-                                "0 0 20px rgba(255, 105, 180, 0.4)"
+                                "0 0 20px rgba(255, 105, 180, 0.5)",
+                                "0 0 60px rgba(255, 105, 180, 0.8), 0 0 30px rgba(139, 92, 246, 0.6)",
+                                "0 0 20px rgba(255, 105, 180, 0.5)"
                             ] : "none",
                             pointerEvents: showButton ? 'auto' : 'none'
                         }}
@@ -802,7 +802,11 @@ function Footer() {
                     <HeartSVG className="heart" />
                 </motion.div>
             </div>
-            <p className="footer-text">Made with love, Bubby</p>
+            <p className="footer-text">
+                Made with love, Bubby
+                <br />
+                <span style={{ fontSize: '0.8em', opacity: 0.8 }}>1/29/26</span>
+            </p>
         </footer>
     );
 }
