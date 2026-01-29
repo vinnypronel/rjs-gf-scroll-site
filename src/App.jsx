@@ -409,9 +409,6 @@ function VideoSection({ scrollYProgress }) {
 
     return (
         <>
-            <div className={`letterbox top ${letterboxActive ? 'active' : ''}`} />
-            <div className={`letterbox bottom ${letterboxActive ? 'active' : ''}`} />
-
             <section className="video-section" ref={ref}>
                 <motion.div
                     className="video-container"
