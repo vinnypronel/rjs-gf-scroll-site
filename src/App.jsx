@@ -519,7 +519,7 @@ function HeroScreen({ onEnter }) {
                     A special message,<br />just for you
                 </CinematicText>
 
-                <div style={{ marginTop: '-50px', height: '80px', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', position: 'relative' }}>
+                <div style={{ marginTop: '-25px', height: '80px', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', position: 'relative' }}>
                     <motion.button
                         id="enter-btn"
                         className={`enter-button`}
@@ -804,8 +804,16 @@ function Footer() {
             </div>
             <p className="footer-text">
                 Made with love, Bubby
-                <br />
-                <span style={{ fontSize: '0.8em', opacity: 0.8 }}>1/29/26</span>
+                <span className="footer-date" style={{
+                    display: 'block',
+                    fontFamily: "'Dancing Script', cursive",
+                    fontSize: '2rem',
+                    marginTop: '0.5rem',
+                    background: 'linear-gradient(135deg, #ff69b4, #8b5cf6)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    opacity: 1
+                }}>1/29/26</span>
             </p>
         </footer>
     );
