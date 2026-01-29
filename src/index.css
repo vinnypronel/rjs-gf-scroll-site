@@ -601,11 +601,15 @@ h6 {
   width: 100%;
   max-width: 500px;
   aspect-ratio: 9/16;
-  padding: 2px;
   background: var(--gradient-glow);
   border-radius: 24px;
-  will-change: transform;
+  padding: 3px;
+  /* Slightly thicker for better visibility */
   margin: 0 auto;
+  overflow: hidden;
+  /* Ensures video corners don't poke out */
+  display: flex;
+  /* Centers video perfectly */
 }
 
 .main-video {
@@ -614,6 +618,9 @@ h6 {
   object-fit: cover;
   display: block;
   border-radius: 21px;
+  /* Slightly smaller than container to fit inside */
+  transform: translateZ(0);
+  /* GPU acceleration */
 }
 
 @media (max-width: 768px) {
