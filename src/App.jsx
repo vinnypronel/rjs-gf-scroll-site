@@ -3,21 +3,21 @@ import { motion, useScroll, useInView, AnimatePresence } from 'framer-motion';
 import Lenis from '@studio-freight/lenis';
 
 // Shared Heart SVG Component
-const HeartSVG = ({ className, gradientId = "heartGradient" }) => (
+const HeartSVG = ({ className }) => (
     <svg
         className={className}
         viewBox="0 0 100 100"
         xmlns="http://www.w3.org/2000/svg"
     >
         <defs>
-            <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="100%">
+            <linearGradient id="heartGradient" x1="0%" y1="0%" x2="100%" y2="100%">
                 <stop offset="0%" stopColor="#ff69b4" />
                 <stop offset="100%" stopColor="#8b5cf6" />
             </linearGradient>
         </defs>
         <path
             d="M50,90 C50,90 10,65 10,40 C10,25 20,15 30,15 C40,15 45,20 50,30 C55,20 60,15 70,15 C80,15 90,25 90,40 C90,65 50,90 50,90 Z"
-            fill={`url(#${gradientId})`}
+            fill="url(#heartGradient)"
         />
     </svg>
 );
@@ -294,7 +294,7 @@ function LoadingScreen({ progress }) {
             </div>
 
             <div className="heart-container">
-                <HeartSVG className="heart" gradientId="loadingHeartGradient" />
+                <HeartSVG className="heart" />
             </div>
         </motion.div>
     );
