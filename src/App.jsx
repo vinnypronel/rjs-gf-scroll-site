@@ -194,10 +194,13 @@ function App() {
         const playEnter = () => {
             if (enterAudioRef.current && !started) {
                 enterAudioRef.current.play().catch(() => { });
+                // Once started, remove all listeners to prevent multiple plays
+                events.forEach(event => window.removeEventListener(event, playEnter));
             }
         };
-        window.addEventListener('click', playEnter, { once: true });
-        return () => window.removeEventListener('click', playEnter);
+        const events = ['click', 'touchstart', 'mousedown', 'keydown'];
+        events.forEach(event => window.addEventListener(event, playEnter, { once: true }));
+        return () => events.forEach(event => window.removeEventListener(event, playEnter));
     }, [started]);
 
     return (
@@ -222,7 +225,7 @@ function App() {
             </AnimatePresence>
 
             {started && !loading && (
-                <div className="scroll-container">
+                <div className="scroll-container main-page-mask">
                     <PrimaryGallery />
                     <MessageSection />
                     <VideoSection scrollYProgress={scrollYProgress} />

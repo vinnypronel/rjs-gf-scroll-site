@@ -1027,3 +1027,10 @@ h6 {
   background-position: center;
   will-change: opacity;
 }
+
+.main-page-mask {
+  background: rgba(0, 0, 0, 0.45);
+  min-height: 100vh;
+  position: relative;
+  z-index: 1;
+}
