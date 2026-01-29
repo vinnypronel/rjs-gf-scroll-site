@@ -37,6 +37,8 @@ html.lenis {
 
 html {
   scroll-behavior: smooth;
+  background-color: #1a0b16;
+  /* Fallback base color */
 }
 
 body {
@@ -46,8 +48,8 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  /* The Gradient Base - Much more vibrant but still deep */
-  background: linear-gradient(135deg, #4a0e36 0%, #1a0b5a 100%);
+  /* The Gradient Base - Applied to both to prevent Safari gaps */
+  background: linear-gradient(135deg, #4a0e36 0%, #1a0b5a 100%) fixed;
   position: relative;
   min-height: 100vh;
 }
@@ -785,31 +787,58 @@ h6 {
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+}
+
+/* Glow behind the heart - more stable than SVG filters on Safari */
+.heart-container::before {
+  content: '';
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  background: radial-gradient(circle, rgba(255, 105, 180, 0.4) 0%, rgba(139, 92, 246, 0.2) 50%, transparent 70%);
+  filter: blur(15px);
+  z-index: 0;
+  animation: heart-glow-pulse 1.2s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes heart-glow-pulse {
+
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+
+  50% {
+    transform: scale(1.5);
+    opacity: 0.9;
+  }
 }
 
 .heart {
   width: 100px;
   height: 100px;
-  animation: pulse-enhanced 1.2s ease-in-out infinite;
-  will-change: transform, filter;
-  filter: drop-shadow(0 0 15px rgba(255, 105, 180, 0.8)) drop-shadow(0 0 30px rgba(139, 92, 246, 0.6));
+  animation: heart-scale-pulse 1.2s ease-in-out infinite;
+  will-change: transform;
+  z-index: 1;
+  /* Stay above the glow */
 }
 
 .heart path {
   fill: url(#heartGradient);
 }
 
-@keyframes pulse-enhanced {
+@keyframes heart-scale-pulse {
 
   0%,
   100% {
     transform: scale(1);
-    filter: drop-shadow(0 0 15px rgba(255, 105, 180, 0.8)) drop-shadow(0 0 30px rgba(139, 92, 246, 0.6));
   }
 
   50% {
     transform: scale(1.25);
-    filter: drop-shadow(0 0 30px rgba(255, 105, 180, 1)) drop-shadow(0 0 60px rgba(139, 92, 246, 0.8)) drop-shadow(0 0 100px rgba(255, 105, 180, 0.6));
   }
 }
 
