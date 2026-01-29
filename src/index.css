@@ -1089,6 +1089,7 @@ h6 {
   cursor: pointer;
   transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+  animation: border-breathing 3s ease-in-out infinite;
 }
 
 .gate-button:hover {

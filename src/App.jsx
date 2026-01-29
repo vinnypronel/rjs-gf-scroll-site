@@ -267,6 +267,9 @@ function InitialGate({ onStart }) {
                 >
                     Start
                 </motion.button>
+                <div className="heart-container" style={{ marginTop: '3rem' }}>
+                    <HeartSVG className="heart" />
+                </div>
             </div>
         </motion.div>
     );
