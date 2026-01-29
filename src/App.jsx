@@ -239,6 +239,24 @@ function App() {
 
 // Initial landing screen to solve auto-play
 function InitialGate({ onStart }) {
+    const [displayedTitle, setDisplayedTitle] = useState('');
+    const [showElements, setShowElements] = useState(false);
+    const fullTitle = 'Sight and Sound';
+
+    useEffect(() => {
+        let index = 0;
+        const interval = setInterval(() => {
+            if (index <= fullTitle.length) {
+                setDisplayedTitle(fullTitle.slice(0, index));
+                index++;
+            } else {
+                clearInterval(interval);
+                setTimeout(() => setShowElements(true), 500);
+            }
+        }, 120);
+        return () => clearInterval(interval);
+    }, []);
+
     return (
         <motion.div
             className="initial-gate"
@@ -248,28 +266,34 @@ function InitialGate({ onStart }) {
             transition={{ duration: 1.2, ease: "easeInOut" }}
         >
             <div className="gate-content">
-                <motion.h1
-                    className="gate-title glowing-text"
-                    initial={{ y: 20, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{ delay: 0.5, duration: 1 }}
-                >
-                    Sight and Sound
-                </motion.h1>
-                <motion.button
-                    className="gate-button"
-                    onClick={onStart}
-                    initial={{ y: 20, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{ delay: 1, duration: 0.8 }}
-                    whileHover={{ scale: 1.05, backgroundColor: "rgba(255,255,255,1)", color: "#000" }}
-                    whileTap={{ scale: 0.95 }}
-                >
-                    Start
-                </motion.button>
-                <div className="heart-container" style={{ marginTop: '3rem' }}>
-                    <HeartSVG className="heart" />
-                </div>
+                <h1 className="gate-title glowing-text">
+                    {displayedTitle}
+                    {displayedTitle.length < fullTitle.length && (
+                        <span className="cursor-blink">|</span>
+                    )}
+                </h1>
+
+                <AnimatePresence>
+                    {showElements && (
+                        <motion.div
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 1 }}
+                        >
+                            <motion.button
+                                className="gate-button"
+                                onClick={onStart}
+                                whileHover={{ scale: 1.05, backgroundColor: "rgba(255,255,255,1)", color: "#000" }}
+                                whileTap={{ scale: 0.95 }}
+                            >
+                                Start
+                            </motion.button>
+                            <div className="heart-container" style={{ marginTop: '3rem' }}>
+                                <HeartSVG className="heart" />
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
             </div>
         </motion.div>
     );
