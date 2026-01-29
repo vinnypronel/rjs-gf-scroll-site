@@ -1,6 +1,61 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, memo, useMemo } from 'react';
 import { motion, useScroll, useInView, AnimatePresence } from 'framer-motion';
 import Lenis from '@studio-freight/lenis';
+
+// Shared Heart SVG Component
+const HeartSVG = ({ className, gradientId = "heartGradient" }) => (
+    <svg
+        className={className}
+        viewBox="0 0 100 100"
+        xmlns="http://www.w3.org/2000/svg"
+    >
+        <defs>
+            <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#ff69b4" />
+                <stop offset="100%" stopColor="#8b5cf6" />
+            </linearGradient>
+        </defs>
+        <path
+            d="M50,90 C50,90 10,65 10,40 C10,25 20,15 30,15 C40,15 45,20 50,30 C55,20 60,15 70,15 C80,15 90,25 90,40 C90,65 50,90 50,90 Z"
+            fill={`url(#${gradientId})`}
+        />
+    </svg>
+);
+
+// Performance-optimized Floating Hearts component
+const FloatingHearts = memo(() => {
+    // Generate static properties once to prevent lag during parent re-renders (like typewriter)
+    const hearts = useMemo(() => {
+        return [...Array(12)].map((_, i) => ({
+            id: i,
+            left: `${Math.random() * 100}vw`,
+            delay: `${i * 0.8}s`,
+            duration: `${Math.random() * 5 + 7}s`,
+            size: `${Math.random() * 20 + 15}px`,
+        }));
+    }, []);
+
+    return (
+        <div className="hearts-container">
+            {hearts.map((heart) => (
+                <div
+                    key={heart.id}
+                    className="floating-heart-css"
+                    style={{
+                        left: heart.left,
+                        animationDelay: heart.delay,
+                        animationDuration: heart.duration,
+                        width: heart.size,
+                        height: heart.size,
+                        willChange: 'transform, opacity'
+                    }}
+                >
+                    <HeartSVG className="heart-svg-asset" />
+                </div>
+            ))}
+        </div>
+    );
+});
 
 function App() {
     const [started, setStarted] = useState(false);
@@ -83,9 +138,6 @@ function App() {
         setLoading(true);
         setLoadingProgress(0);
 
-        // Start fading out the enter audio
-        fadeOutAudio(enterAudioRef.current, 2000);
-
         const duration = 4000; // 4 seconds total
         const startTime = performance.now();
 
@@ -95,9 +147,21 @@ function App() {
 
             setLoadingProgress(progress);
 
+            // Sync intro fade-out with progress (start fading at 50% progress)
+            if (progress > 50 && enterAudioRef.current) {
+                const fadeProgress = (progress - 50) / 50; // 0 to 1
+                enterAudioRef.current.volume = Math.max(0, 1 - fadeProgress);
+            }
+
             if (progress < 100) {
                 requestAnimationFrame(updateProgress);
             } else {
+                // Intro stop completely at 100%
+                if (enterAudioRef.current) {
+                    enterAudioRef.current.pause();
+                    enterAudioRef.current.currentTime = 0;
+                }
+
                 // Finalize transition after a short delay
                 setTimeout(() => {
                     setLoading(false);
@@ -192,22 +256,7 @@ function LoadingScreen({ progress }) {
             </div>
 
             <div className="heart-container">
-                <svg
-                    className="heart"
-                    viewBox="0 0 100 100"
-                    xmlns="http://www.w3.org/2000/svg"
-                >
-                    <defs>
-                        <linearGradient id="heartGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stopColor="#ff69b4" />
-                            <stop offset="100%" stopColor="#8b5cf6" />
-                        </linearGradient>
-                    </defs>
-                    <path
-                        d="M50,90 C50,90 10,65 10,40 C10,25 20,15 30,15 C40,15 45,20 50,30 C55,20 60,15 70,15 C80,15 90,25 90,40 C90,65 50,90 50,90 Z"
-                        fill="url(#heartGradient)"
-                    />
-                </svg>
+                <HeartSVG className="heart" gradientId="loadingHeartGradient" />
             </div>
         </motion.div>
     );
@@ -315,24 +364,8 @@ function HeroScreen({ onEnter }) {
                 ))}
             </div>
 
-            {/* Performance-optimized Hearts (CSS-animated) */}
-            <div className="hearts-container">
-                {[...Array(12)].map((_, i) => (
-                    <div
-                        key={i}
-                        className="floating-heart-css"
-                        style={{
-                            left: `${Math.random() * 100}vw`,
-                            animationDelay: `${i * 0.8}s`,
-                            animationDuration: `${Math.random() * 5 + 7}s`,
-                            fontSize: `${Math.random() * 20 + 15}px`,
-                            willChange: 'transform, opacity'
-                        }}
-                    >
-                        ❤️
-                    </div>
-                ))}
-            </div>
+            {/* Performance-optimized Floating Hearts */}
+            <FloatingHearts />
 
             {/* Performance-optimized Sparkles (CSS-animated) */}
             <div className="sparkles-container">
@@ -643,22 +676,7 @@ function Footer() {
             </motion.h2>
 
             <div className="heart-container">
-                <svg
-                    className="heart"
-                    viewBox="0 0 100 100"
-                    xmlns="http://www.w3.org/2000/svg"
-                >
-                    <defs>
-                        <linearGradient id="heartGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stopColor="#ff69b4" />
-                            <stop offset="100%" stopColor="#8b5cf6" />
-                        </linearGradient>
-                    </defs>
-                    <path
-                        d="M50,90 C50,90 10,65 10,40 C10,25 20,15 30,15 C40,15 45,20 50,30 C55,20 60,15 70,15 C80,15 90,25 90,40 C90,65 50,90 50,90 Z"
-                        fill="url(#heartGradient)"
-                    />
-                </svg>
+                <HeartSVG className="heart" />
             </div>
             <p className="footer-text">Made with love, Bubby</p>
         </footer>
