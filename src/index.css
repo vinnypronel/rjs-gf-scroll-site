@@ -223,6 +223,8 @@ h6 {
   text-align: center;
   width: 100%;
   letter-spacing: 0.05em;
+  white-space: pre-wrap;
+  line-height: 1.2;
 }
 
 .enter-button {
