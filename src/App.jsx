@@ -445,43 +445,41 @@ function HeroScreen({ onEnter }) {
                     {"A special message just for you"}
                 </CinematicText>
 
-                <AnimatePresence>
-                    {showButton && (
-                        <motion.button
-                            id="enter-btn"
-                            className={`enter-button glowing-button mega-glow ${showButton ? 'show' : ''}`}
-                            onClick={onEnter}
-                            initial={{ y: 20, opacity: 0 }}
+                {showButton && (
+                    <motion.button
+                        id="enter-btn"
+                        className={`enter-button glowing-button mega-glow show`}
+                        onClick={onEnter}
+                        initial={{ y: 20, opacity: 0 }}
+                        animate={{
+                            y: 0,
+                            opacity: 1,
+                        }}
+                        transition={{
+                            duration: 1.0,
+                            ease: "easeOut"
+                        }}
+                        whileHover={{
+                            scale: 1.15,
+                            rotate: [0, -2, 2, -2, 0],
+                            transition: { duration: 0.3 }
+                        }}
+                        whileTap={{ scale: 0.9 }}
+                    >
+                        <motion.span
                             animate={{
-                                y: 0,
-                                opacity: 1,
+                                textShadow: [
+                                    '0 0 20px rgba(255,255,255,1), 0 0 40px rgba(255,105,180,1)',
+                                    '0 0 30px rgba(255,255,255,1), 0 0 60px rgba(255,105,180,1), 0 0 80px rgba(139,92,246,1)',
+                                    '0 0 20px rgba(255,255,255,1), 0 0 40px rgba(255,105,180,1)'
+                                ]
                             }}
-                            transition={{
-                                duration: 1.0,
-                                ease: "easeOut"
-                            }}
-                            whileHover={{
-                                scale: 1.15,
-                                rotate: [0, -2, 2, -2, 0],
-                                transition: { duration: 0.3 }
-                            }}
-                            whileTap={{ scale: 0.9 }}
+                            transition={{ duration: 1.5, repeat: Infinity }}
                         >
-                            <motion.span
-                                animate={{
-                                    textShadow: [
-                                        '0 0 20px rgba(255,255,255,1), 0 0 40px rgba(255,105,180,1)',
-                                        '0 0 30px rgba(255,255,255,1), 0 0 60px rgba(255,105,180,1), 0 0 80px rgba(139,92,246,1)',
-                                        '0 0 20px rgba(255,255,255,1), 0 0 40px rgba(255,105,180,1)'
-                                    ]
-                                }}
-                                transition={{ duration: 1.5, repeat: Infinity }}
-                            >
-                                Enter
-                            </motion.span>
-                        </motion.button>
-                    )}
-                </AnimatePresence>
+                            Enter
+                        </motion.span>
+                    </motion.button>
+                )}
             </div>
         </motion.div>
     );
