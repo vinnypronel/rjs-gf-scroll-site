@@ -424,11 +424,9 @@ function VideoSection({ scrollYProgress }) {
                         muted
                         loop
                         playsInline
-                        webkit-playsinline="true"
                         preload="auto"
                         className="main-video"
                     >
-                        <source src="/vids/video.mp4" type="video/quicktime" />
                         <source src="/vids/video.mp4" type="video/mp4" />
                     </video>
                 </motion.div>
