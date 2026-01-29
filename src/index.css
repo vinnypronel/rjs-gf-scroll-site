@@ -79,6 +79,43 @@ h6 {
   font-family: 'Playfair Display', serif;
   font-weight: 600;
   letter-spacing: -0.02em;
+  opacity: 1 !important;
+  filter: none !important;
+  visibility: visible !important;
+}
+
+/* Cinematic Blur-In for Intro */
+.blur-in-text {
+  animation: cinematic-blur-in 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes cinematic-blur-in {
+  0% {
+    opacity: 0;
+    filter: blur(10px);
+    transform: translateY(15px);
+  }
+
+  100% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
+}
+
+/* Fast Breathing Pulse for Images */
+@keyframes fast-pulse {
+  from {
+    transform: scale(1);
+  }
+
+  to {
+    transform: scale(1.02);
+  }
+}
+
+.breathing-image {
+  animation: fast-pulse 0.8s ease-in-out infinite alternate;
 }
 
 /* Smooth Scroll Container */
@@ -416,7 +453,6 @@ h6 {
 .gallery-item {
   position: relative;
   display: flex;
-  /* Helps eliminate inner gaps */
   border-radius: 20px;
   padding: 2px;
   background: var(--gradient-glow);
@@ -425,6 +461,7 @@ h6 {
   box-sizing: border-box;
   aspect-ratio: 1;
   cursor: pointer;
+  animation: fast-pulse 0.8s ease-in-out infinite alternate;
 }
 
 @keyframes breathing-glow {
@@ -701,6 +738,7 @@ h6 {
   will-change: transform;
   transform: translateZ(0);
   box-sizing: border-box;
+  animation: fast-pulse 0.8s ease-in-out infinite alternate;
 }
 
 .feature-item img {

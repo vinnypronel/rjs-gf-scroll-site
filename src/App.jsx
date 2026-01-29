@@ -22,6 +22,25 @@ const HeartSVG = ({ className }) => (
     </svg>
 );
 
+// Cinematic Blur-In Text Component
+const CinematicText = ({ children, delay = 0, className = "" }) => {
+    return (
+        <motion.div
+            initial={{ opacity: 0, filter: 'blur(10px)', y: 15 }}
+            animate={{ opacity: 1, filter: 'blur(0px)', y: 0 }}
+            transition={{
+                duration: 1.2,
+                delay,
+                ease: [0.2, 0.8, 0.2, 1]
+            }}
+            className={className}
+            style={{ animationFillMode: 'forwards' }}
+        >
+            {children}
+        </motion.div>
+    );
+};
+
 // Performance-optimized Floating Hearts component
 const FloatingHearts = memo(() => {
     // Generate static properties once to prevent lag during parent re-renders (like typewriter)
@@ -148,29 +167,31 @@ function App() {
 
             setLoadingProgress(progress);
 
-            // Sync intro fade-out with progress (start fading at 50% progress)
-            if (progress > 50 && enterAudioRef.current) {
-                const fadeProgress = (progress - 50) / 50; // 0 to 1
+            // Intro fade logic: Start fading 1s before 100% or upon reaching 100%
+            // Based on 4s total, 1s is the last 25% (75% to 100%)
+            if (progress >= 75 && enterAudioRef.current) {
+                const fadeProgress = (progress - 75) / 25; // 0 to 1
                 enterAudioRef.current.volume = Math.max(0, 1 - fadeProgress);
             }
 
             if (progress < 100) {
                 requestAnimationFrame(updateProgress);
             } else {
-                // Intro stop completely at 100%
+                // Track 1 (Intro): pause completely at 100%
                 if (enterAudioRef.current) {
                     enterAudioRef.current.pause();
-                    enterAudioRef.current.currentTime = 0;
+                    enterAudioRef.current.volume = 0;
                 }
 
-                // Finalize transition after a short delay
+                // Finalize transition
                 setTimeout(() => {
                     setLoading(false);
                     setStarted(true);
+
                     if (mainAudioRef.current) {
                         mainAudioRef.current.volume = 0;
                         mainAudioRef.current.play().then(() => {
-                            // Fade in main audio
+                            // Track 2 (Main): Fade volume to 1.0
                             let vol = 0;
                             const fadeIn = setInterval(() => {
                                 if (vol < 0.95) {
@@ -180,10 +201,10 @@ function App() {
                                     mainAudioRef.current.volume = 1;
                                     clearInterval(fadeIn);
                                 }
-                            }, 100);
+                            }, 100); // Fades in over ~2 seconds
                         }).catch(err => console.log('Audio play failed:', err));
                     }
-                }, 800);
+                }, 500);
             }
         };
 
@@ -239,22 +260,11 @@ function App() {
 
 // Initial landing screen to solve auto-play
 function InitialGate({ onStart }) {
-    const [displayedTitle, setDisplayedTitle] = useState('');
     const [showElements, setShowElements] = useState(false);
-    const fullTitle = 'Sight and Sound';
 
     useEffect(() => {
-        let index = 0;
-        const interval = setInterval(() => {
-            if (index <= fullTitle.length) {
-                setDisplayedTitle(fullTitle.slice(0, index));
-                index++;
-            } else {
-                clearInterval(interval);
-                setTimeout(() => setShowElements(true), 500);
-            }
-        }, 120);
-        return () => clearInterval(interval);
+        const timer = setTimeout(() => setShowElements(true), 1200);
+        return () => clearTimeout(timer);
     }, []);
 
     return (
@@ -267,12 +277,9 @@ function InitialGate({ onStart }) {
         >
             <div className="gate-content">
                 <div className="gate-section">
-                    <h1 className="gate-title glowing-text">
-                        {displayedTitle}
-                        {displayedTitle.length < fullTitle.length && (
-                            <span className="cursor-blink">|</span>
-                        )}
-                    </h1>
+                    <CinematicText className="gate-title glowing-text">
+                        Sight and Sound
+                    </CinematicText>
                 </div>
 
                 <div className="gate-section">
@@ -321,10 +328,13 @@ function LoadingScreen({ progress }) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.8 }}
+            style={{ zIndex: 30000 }}
         >
-            <h2 className="loading-percentage">
+            <FloatingHearts />
+
+            <CinematicText className="loading-percentage">
                 {Math.round(progress)}%
-            </h2>
+            </CinematicText>
 
             <div className="loading-bar-container">
                 <div
@@ -343,12 +353,7 @@ function LoadingScreen({ progress }) {
 // Animated Hero Screen Component with Slideshow & Floating Hearts
 function HeroScreen({ onEnter }) {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
-    const [titleText, setTitleText] = useState('');
-    const [subtitleText, setSubtitleText] = useState('');
     const [showButton, setShowButton] = useState(false);
-
-    const fullTitle = "Happy\nBirthday\nMi Vida";
-    const fullSubtitle = "A special message just for you";
 
     const heroImages = [
         '/images/272F9FA0-793B-4852-B23F-18D3D642AC95.JPEG',
@@ -375,40 +380,6 @@ function HeroScreen({ onEnter }) {
         return () => clearInterval(interval);
     }, []);
 
-    // Typewriter effect for title
-    useEffect(() => {
-        let currentIndex = 0;
-        const typingInterval = setInterval(() => {
-            if (currentIndex <= fullTitle.length) {
-                setTitleText(fullTitle.slice(0, currentIndex));
-                currentIndex++;
-            } else {
-                clearInterval(typingInterval);
-            }
-        }, 100);
-
-        return () => clearInterval(typingInterval);
-    }, []);
-
-    // Typewriter effect for subtitle (starts after title)
-    useEffect(() => {
-        const startDelay = setTimeout(() => {
-            let currentIndex = 0;
-            const typingInterval = setInterval(() => {
-                if (currentIndex <= fullSubtitle.length) {
-                    setSubtitleText(fullSubtitle.slice(0, currentIndex));
-                    currentIndex++;
-                } else {
-                    clearInterval(typingInterval);
-                    setTimeout(() => setShowButton(true), 800); // Longer delay before fade starts
-                }
-            }, 80);
-
-            return () => clearInterval(typingInterval);
-        }, fullTitle.length * 100 + 300);
-
-        return () => clearTimeout(startDelay);
-    }, []);
 
     return (
         <motion.div
@@ -462,21 +433,13 @@ function HeroScreen({ onEnter }) {
             </div>
 
             <div className="hero-content">
-                <h1 className="hero-title glowing-text typewriter">
-                    {titleText}
-                    <span className="cursor-blink">|</span>
-                </h1>
+                <CinematicText className="hero-title glowing-text">
+                    {"Happy\nBirthday\nMi Vida"}
+                </CinematicText>
 
-                <motion.p
-                    className="hero-subtitle glowing-subtitle"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: subtitleText ? 1 : 0 }}
-                >
-                    {subtitleText}
-                    {subtitleText && subtitleText.length < fullSubtitle.length && (
-                        <span className="cursor-blink">|</span>
-                    )}
-                </motion.p>
+                <CinematicText className="hero-subtitle glowing-subtitle" delay={1.5}>
+                    {"A special message just for you"}
+                </CinematicText>
 
                 <AnimatePresence>
                     {showButton && (
@@ -529,15 +492,9 @@ function PrimaryGallery() {
 
     return (
         <section className="gallery-section">
-            <motion.h2
-                className="gallery-title"
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4 }}
-            >
+            <h2 className="gallery-title">
                 Our Memories
-            </motion.h2>
+            </h2>
             <div className="gallery-grid">
                 {images.map((img, index) => (
                     <GalleryImage key={index} src={img} index={index} />
@@ -623,15 +580,9 @@ function MessageSection() {
     return (
         <section className="message-section" ref={ref}>
             <div className="message-text-wrapper">
-                <motion.h2
-                    className="message-intro-title"
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.8 }}
-                >
+                <h2 className="message-intro-title">
                     The First Paragraph I Ever Wrote To You...
-                </motion.h2>
+                </h2>
                 <p className="message-text typewriter-message">
                     {displayedText}
                     {hasStarted && displayedText.length < message.length && (
@@ -704,15 +655,9 @@ function FeatureGallery() {
 
     return (
         <section className="feature-gallery">
-            <motion.h2
-                className="gallery-title"
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4 }}
-            >
+            <h2 className="gallery-title">
                 More of Us
-            </motion.h2>
+            </h2>
             <div className="feature-grid">
                 {images.map((img, index) => {
                     const layoutProps = {
@@ -741,17 +686,11 @@ function FeatureGallery() {
 function Footer() {
     return (
         <footer className="footer combined-footer">
-            <motion.h2
-                className="special-message-title"
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-            >
+            <h2 className="special-message-title">
                 You truly are the best thing that ever happened to me,
                 <br />
                 Hoping today is as special as you
-            </motion.h2>
+            </h2>
 
             <div className="heart-container">
                 <HeartSVG className="heart" />
