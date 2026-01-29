@@ -845,7 +845,7 @@ h6 {
   background: radial-gradient(circle, rgba(255, 105, 180, 0.4) 0%, rgba(139, 92, 246, 0.2) 50%, transparent 70%);
   filter: blur(15px);
   z-index: 0;
-  animation: heart-glow-pulse 1.2s ease-in-out infinite;
+  animation: heart-glow-pulse 2.5s ease-in-out infinite;
   pointer-events: none;
 }
 
@@ -1117,6 +1117,17 @@ h6 {
   min-height: 100vh;
   position: relative;
   z-index: 1;
+  animation: main-page-fade 1.5s ease-out forwards;
+}
+
+@keyframes main-page-fade {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 /* Initial Gate Screen */
