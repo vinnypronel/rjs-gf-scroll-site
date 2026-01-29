@@ -278,7 +278,7 @@ function InitialGate({ onStart }) {
                                 animate={{
                                     opacity: 1,
                                     y: 0,
-                                    scale: [1, 1.1, 1],
+                                    scale: [1, 1.15, 1],
                                 }}
                                 transition={{
                                     opacity: { duration: 0.8 },
@@ -288,10 +288,10 @@ function InitialGate({ onStart }) {
                                 className="gate-button"
                                 onClick={onStart}
                                 whileHover={{
-                                    scale: 1.15,
+                                    scale: 1.2,
                                     backgroundColor: "#ff1493",
                                     color: "#fff",
-                                    boxShadow: "0 0 40px rgba(255, 20, 147, 0.8)"
+                                    boxShadow: "0 0 50px rgba(255, 20, 147, 0.9)"
                                 }}
                                 whileTap={{ scale: 0.95 }}
                             >
@@ -317,22 +317,22 @@ function InitialGate({ onStart }) {
                                 <motion.div
                                     className="heart-glow-motion"
                                     animate={{
-                                        scale: [2.5, 4.0, 2.5],
-                                        opacity: [0.4, 0.8, 0.4],
+                                        scale: [2.0, 3.5, 2.0],
+                                        opacity: [0.6, 1, 0.6],
                                     }}
                                     transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
                                     style={{
                                         position: 'absolute',
                                         width: '100px',
                                         height: '100px',
-                                        background: 'radial-gradient(circle, rgba(255, 105, 180, 0.6) 0%, rgba(139, 92, 246, 0.4) 50%, transparent 70%)',
-                                        filter: 'blur(30px)',
+                                        background: 'radial-gradient(circle, rgba(255, 105, 180, 0.8) 0%, rgba(139, 92, 246, 0.5) 50%, transparent 70%)',
+                                        filter: 'blur(20px)',
                                         zIndex: 0,
                                         pointerEvents: 'none'
                                     }}
                                 />
                                 <motion.div
-                                    animate={{ scale: [2.2, 2.5, 2.2] }}
+                                    animate={{ scale: [2.5, 3.0, 2.5] }}
                                     transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
                                     style={{ zIndex: 1 }}
                                 >
