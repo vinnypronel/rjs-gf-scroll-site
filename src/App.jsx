@@ -81,20 +81,24 @@ function App() {
 
     const handleEnter = async () => {
         setLoading(true);
+        setLoadingProgress(0);
 
         // Start fading out the enter audio
         fadeOutAudio(enterAudioRef.current, 2000);
 
-        // Loading Progress Simulation
-        let progress = 0;
-        const interval = setInterval(() => {
-            progress += Math.random() * 15; // "fills up slightly fast"
-            if (progress >= 100) {
-                progress = 100;
-                setLoadingProgress(100);
-                clearInterval(interval);
+        const duration = 4000; // 4 seconds total
+        const startTime = performance.now();
 
-                // Finalize transition
+        const updateProgress = (currentTime) => {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min((elapsed / duration) * 100, 100);
+
+            setLoadingProgress(progress);
+
+            if (progress < 100) {
+                requestAnimationFrame(updateProgress);
+            } else {
+                // Finalize transition after a short delay
                 setTimeout(() => {
                     setLoading(false);
                     setStarted(true);
@@ -115,10 +119,10 @@ function App() {
                         }).catch(err => console.log('Audio play failed:', err));
                     }
                 }, 800);
-            } else {
-                setLoadingProgress(progress);
             }
-        }, 300); // 3-4 seconds total
+        };
+
+        requestAnimationFrame(updateProgress);
     };
 
     // Auto-play enter song on first interaction/mount if possible
@@ -194,14 +198,14 @@ function LoadingScreen({ progress }) {
                     xmlns="http://www.w3.org/2000/svg"
                 >
                     <defs>
-                        <linearGradient id="loadingHeartGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <linearGradient id="heartGradient" x1="0%" y1="0%" x2="100%" y2="100%">
                             <stop offset="0%" stopColor="#ff69b4" />
                             <stop offset="100%" stopColor="#8b5cf6" />
                         </linearGradient>
                     </defs>
                     <path
                         d="M50,90 C50,90 10,65 10,40 C10,25 20,15 30,15 C40,15 45,20 50,30 C55,20 60,15 70,15 C80,15 90,25 90,40 C90,65 50,90 50,90 Z"
-                        fill="url(#loadingHeartGradient)"
+                        fill="url(#heartGradient)"
                     />
                 </svg>
             </div>
