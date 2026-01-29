@@ -317,16 +317,16 @@ function InitialGate({ onStart }) {
                                 <motion.div
                                     className="heart-glow-motion"
                                     animate={{
-                                        scale: [2.5, 3.5, 2.5],
-                                        opacity: [0.5, 0.8, 0.5],
+                                        scale: [2.5, 4.0, 2.5],
+                                        opacity: [0.4, 0.8, 0.4],
                                     }}
                                     transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
                                     style={{
                                         position: 'absolute',
                                         width: '100px',
                                         height: '100px',
-                                        background: 'radial-gradient(circle, rgba(255, 105, 180, 0.5) 0%, rgba(139, 92, 246, 0.3) 50%, transparent 70%)',
-                                        filter: 'blur(25px)',
+                                        background: 'radial-gradient(circle, rgba(255, 105, 180, 0.6) 0%, rgba(139, 92, 246, 0.4) 50%, transparent 70%)',
+                                        filter: 'blur(30px)',
                                         zIndex: 0,
                                         pointerEvents: 'none'
                                     }}
@@ -518,30 +518,30 @@ function HeroScreen({ onEnter }) {
                     {"A special message just for you"}
                 </CinematicText>
 
-                {showButton && (
+                <div style={{ height: '80px', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', position: 'relative' }}>
                     <motion.button
                         id="enter-btn"
-                        className={`enter-button show`} /* Removed CSS classes that might conflict */
+                        className={`enter-button`}
                         onClick={onEnter}
-                        initial={{ y: 20, opacity: 0 }}
+                        initial={{ opacity: 0 }}
                         animate={{
-                            y: 0,
-                            opacity: 1,
-                            scale: [1, 1.05, 1],
-                            boxShadow: [
+                            opacity: showButton ? 1 : 0,
+                            scale: showButton ? [1, 1.05, 1] : 1,
+                            boxShadow: showButton ? [
                                 "0 0 20px rgba(255, 105, 180, 0.4)",
-                                "0 0 40px rgba(255, 105, 180, 0.8)",
+                                "0 0 40px rgba(189, 89, 242, 0.4)",
                                 "0 0 20px rgba(255, 105, 180, 0.4)"
-                            ]
+                            ] : "none",
+                            pointerEvents: showButton ? 'auto' : 'none'
                         }}
                         transition={{
-                            y: { duration: 1.0, ease: "easeOut" },
-                            opacity: { duration: 1.0 },
+                            opacity: { duration: 1.5, ease: "easeOut" },
                             scale: { duration: 2, repeat: Infinity, ease: "easeInOut" },
                             boxShadow: { duration: 2, repeat: Infinity, ease: "easeInOut" }
                         }}
                         whileHover={{
                             scale: 1.12,
+                            boxShadow: "0 0 50px rgba(255, 105, 180, 0.8)",
                             transition: { duration: 0.2 }
                         }}
                         whileTap={{ scale: 0.95 }}
@@ -549,17 +549,17 @@ function HeroScreen({ onEnter }) {
                         <motion.span
                             animate={{
                                 textShadow: [
-                                    '0 0 20px rgba(255,255,255,1), 0 0 40px rgba(255,105,180,1)',
-                                    '0 0 30px rgba(255,255,255,1), 0 0 60px rgba(255,105,180,1), 0 0 80px rgba(139,92,246,1)',
-                                    '0 0 20px rgba(255,255,255,1), 0 0 40px rgba(255,105,180,1)'
+                                    '0 0 10px rgba(255,255,255,0.8)',
+                                    '0 0 20px rgba(255,255,255,1)',
+                                    '0 0 10px rgba(255,255,255,0.8)'
                                 ]
                             }}
-                            transition={{ duration: 1.5, repeat: Infinity }}
+                            transition={{ duration: 2, repeat: Infinity }}
                         >
                             Enter
                         </motion.span>
                     </motion.button>
-                )}
+                </div>
             </div>
         </motion.div>
     );
