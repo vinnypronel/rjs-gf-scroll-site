@@ -883,26 +883,48 @@ h6 {
   left: 0;
   width: 100%;
   height: 100%;
-  background: var(--bg-dark);
+  background: #050505;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  z-index: 9999;
+  z-index: 10000;
+  gap: 2rem;
 }
 
-.loading-spinner {
-  width: 50px;
-  height: 50px;
-  border: 3px solid rgba(255, 255, 255, 0.1);
-  border-top-color: #ff69b4;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
+.loading-bar-container {
+  width: 280px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
 }
 
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
+.loading-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ff69b4, #8b5cf6);
+  width: 0%;
+  transition: width 0.1s linear;
+  box-shadow: 0 0 15px rgba(255, 105, 180, 0.8);
+}
+
+.loading-percentage {
+  font-family: 'Playfair Display', serif;
+  font-size: 5rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #ff69b4, #8b5cf6);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin: 0;
+  line-height: 1;
+  text-shadow: 0 0 30px rgba(255, 105, 180, 0.3);
+}
+
+.loading-heart-container {
+  margin-top: 1rem;
 }
 
 /* Optimized CSS Heart Animation */

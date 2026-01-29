@@ -4,22 +4,24 @@ import Lenis from '@studio-freight/lenis';
 
 function App() {
     const [started, setStarted] = useState(false);
-    const [audioReady, setAudioReady] = useState(false);
-    const audioRef = useRef(null);
+    const [loading, setLoading] = useState(false);
+    const [loadingProgress, setLoadingProgress] = useState(0);
+    const enterAudioRef = useRef(null);
+    const mainAudioRef = useRef(null);
     const { scrollYProgress } = useScroll();
 
     // High performance smooth scroll
     useEffect(() => {
-        if (!started) return;
+        if (!started || loading) return;
 
         const lenis = new Lenis({
-            duration: 1.0, // Snappier duration
+            duration: 1.0,
             easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
             direction: 'vertical',
             gestureDirection: 'vertical',
             smooth: true,
             mouseMultiplier: 1,
-            smoothTouch: true, // Enable smooth touch for better mobile feel
+            smoothTouch: true,
             touchMultiplier: 2,
             infinite: false,
             lerp: 0.1,
@@ -35,28 +37,123 @@ function App() {
         return () => {
             lenis.destroy();
         };
-    }, [started]);
+    }, [started, loading]);
 
-    const handleEnter = () => {
-        setStarted(true);
-        if (audioRef.current) {
-            audioRef.current.play().catch(err => console.log('Audio play failed:', err));
-            setAudioReady(true);
-        }
+    // Visibility change handler for iPhone (Auto-pause/resume)
+    useEffect(() => {
+        const handleVisibilityChange = () => {
+            if (document.hidden) {
+                if (enterAudioRef.current) enterAudioRef.current.pause();
+                if (mainAudioRef.current) mainAudioRef.current.pause();
+            } else {
+                // Resume appropriate audio if user has interacted
+                if (started && !loading) {
+                    mainAudioRef.current?.play().catch(e => console.log('Main audio resume failed', e));
+                } else if (!started || loading) {
+                    enterAudioRef.current?.play().catch(e => console.log('Enter audio resume failed', e));
+                }
+            }
+        };
+
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+        return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+    }, [started, loading]);
+
+    const fadeOutAudio = (audioElement, duration = 1500) => {
+        if (!audioElement) return Promise.resolve();
+        const startVolume = audioElement.volume;
+        const speed = 0.05;
+        const interval = duration / (startVolume / speed);
+
+        return new Promise((resolve) => {
+            const fade = setInterval(() => {
+                if (audioElement.volume > speed) {
+                    audioElement.volume -= speed;
+                } else {
+                    audioElement.volume = 0;
+                    audioElement.pause();
+                    clearInterval(fade);
+                    resolve();
+                }
+            }, interval);
+        });
     };
+
+    const handleEnter = async () => {
+        setLoading(true);
+
+        // Start fading out the enter audio
+        fadeOutAudio(enterAudioRef.current, 2000);
+
+        // Loading Progress Simulation
+        let progress = 0;
+        const interval = setInterval(() => {
+            progress += Math.random() * 15; // "fills up slightly fast"
+            if (progress >= 100) {
+                progress = 100;
+                setLoadingProgress(100);
+                clearInterval(interval);
+
+                // Finalize transition
+                setTimeout(() => {
+                    setLoading(false);
+                    setStarted(true);
+                    if (mainAudioRef.current) {
+                        mainAudioRef.current.volume = 0;
+                        mainAudioRef.current.play().then(() => {
+                            // Fade in main audio
+                            let vol = 0;
+                            const fadeIn = setInterval(() => {
+                                if (vol < 0.95) {
+                                    vol += 0.05;
+                                    mainAudioRef.current.volume = vol;
+                                } else {
+                                    mainAudioRef.current.volume = 1;
+                                    clearInterval(fadeIn);
+                                }
+                            }, 100);
+                        }).catch(err => console.log('Audio play failed:', err));
+                    }
+                }, 800);
+            } else {
+                setLoadingProgress(progress);
+            }
+        }, 300); // 3-4 seconds total
+    };
+
+    // Auto-play enter song on first interaction/mount if possible
+    useEffect(() => {
+        const playEnter = () => {
+            if (enterAudioRef.current && !started) {
+                enterAudioRef.current.play().catch(() => { });
+            }
+        };
+        window.addEventListener('click', playEnter, { once: true });
+        return () => window.removeEventListener('click', playEnter);
+    }, [started]);
 
     return (
         <>
             <div className="background-overlay" />
-            <audio ref={audioRef} loop>
+
+            <audio ref={enterAudioRef} loop>
+                <source src="/background-audio/Phenergan Pt 2..mp3" type="audio/mpeg" />
+            </audio>
+
+            <audio ref={mainAudioRef} loop>
                 <source src="/background-audio/Lil Yachty - drive ME crazy! (Official Audio).mp3" type="audio/mpeg" />
             </audio>
 
             <AnimatePresence mode="wait">
-                {!started && <HeroScreen onEnter={handleEnter} />}
+                {loading && (
+                    <LoadingScreen key="loading" progress={loadingProgress} />
+                )}
+                {!started && !loading && (
+                    <HeroScreen key="hero" onEnter={handleEnter} />
+                )}
             </AnimatePresence>
 
-            {started && (
+            {started && !loading && (
                 <div className="scroll-container">
                     <PrimaryGallery />
                     <MessageSection />
@@ -66,6 +163,49 @@ function App() {
                 </div>
             )}
         </>
+    );
+}
+
+// Fullscreen Loading Screen component
+function LoadingScreen({ progress }) {
+    return (
+        <motion.div
+            className="loading-screen"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.8 }}
+        >
+            <h2 className="loading-percentage">
+                {Math.round(progress)}%
+            </h2>
+
+            <div className="loading-bar-container">
+                <div
+                    className="loading-bar-fill"
+                    style={{ width: `${progress}%` }}
+                />
+            </div>
+
+            <div className="heart-container">
+                <svg
+                    className="heart"
+                    viewBox="0 0 100 100"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <defs>
+                        <linearGradient id="loadingHeartGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stopColor="#ff69b4" />
+                            <stop offset="100%" stopColor="#8b5cf6" />
+                        </linearGradient>
+                    </defs>
+                    <path
+                        d="M50,90 C50,90 10,65 10,40 C10,25 20,15 30,15 C40,15 45,20 50,30 C55,20 60,15 70,15 C80,15 90,25 90,40 C90,65 50,90 50,90 Z"
+                        fill="url(#loadingHeartGradient)"
+                    />
+                </svg>
+            </div>
+        </motion.div>
     );
 }
 
