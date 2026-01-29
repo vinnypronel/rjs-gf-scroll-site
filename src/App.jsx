@@ -278,20 +278,20 @@ function InitialGate({ onStart }) {
                                 animate={{
                                     opacity: 1,
                                     y: 0,
-                                    scale: [1, 1.15, 1],
+                                    scale: [1, 1.2, 1],
                                 }}
                                 transition={{
-                                    opacity: { duration: 0.8 },
-                                    y: { duration: 0.8 },
-                                    scale: { duration: 2.5, repeat: Infinity, ease: "easeInOut" }
+                                    opacity: { duration: 0.8, delay: 0 },
+                                    y: { duration: 0.8, delay: 0 },
+                                    scale: { duration: 2.0, repeat: Infinity, ease: "easeInOut", delay: 0 } // Syncs with heart
                                 }}
                                 className="gate-button"
                                 onClick={onStart}
                                 whileHover={{
-                                    scale: 1.2,
+                                    scale: 1.25,
                                     backgroundColor: "#ff1493",
                                     color: "#fff",
-                                    boxShadow: "0 0 50px rgba(255, 20, 147, 0.9)"
+                                    boxShadow: "0 0 50px rgba(255, 20, 147, 1)"
                                 }}
                                 whileTap={{ scale: 0.95 }}
                             >
@@ -310,30 +310,31 @@ function InitialGate({ onStart }) {
                                     opacity: 1,
                                 }}
                                 transition={{
-                                    opacity: { duration: 0.8 },
+                                    opacity: { duration: 0.8, delay: 0.6 }, // Fades in AFTER button
                                 }}
                                 className="heart-container"
                             >
                                 <motion.div
                                     className="heart-glow-motion"
                                     animate={{
-                                        scale: [2.0, 3.5, 2.0],
-                                        opacity: [0.6, 1, 0.6],
+                                        scale: [2.0, 4.5, 2.0],
+                                        opacity: [0.8, 1, 0.8],
                                     }}
-                                    transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+                                    transition={{ duration: 2.0, repeat: Infinity, ease: "easeInOut", delay: 0 }} // Syncs with button
                                     style={{
                                         position: 'absolute',
                                         width: '100px',
                                         height: '100px',
-                                        background: 'radial-gradient(circle, rgba(255, 105, 180, 0.8) 0%, rgba(139, 92, 246, 0.5) 50%, transparent 70%)',
-                                        filter: 'blur(20px)',
+                                        background: 'radial-gradient(circle, rgba(255, 20, 147, 0.9) 0%, rgba(139, 92, 246, 0.6) 40%, transparent 70%)',
+                                        filter: 'blur(15px)',
                                         zIndex: 0,
-                                        pointerEvents: 'none'
+                                        pointerEvents: 'none',
+                                        mixBlendMode: 'screen'
                                     }}
                                 />
                                 <motion.div
-                                    animate={{ scale: [2.5, 3.0, 2.5] }}
-                                    transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+                                    animate={{ scale: [2.2, 2.8, 2.2] }}
+                                    transition={{ duration: 2.0, repeat: Infinity, ease: "easeInOut", delay: 0 }} // Syncs with button
                                     style={{ zIndex: 1 }}
                                 >
                                     <HeartSVG className="heart" />
