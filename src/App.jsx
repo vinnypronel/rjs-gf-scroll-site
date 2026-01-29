@@ -47,6 +47,7 @@ function App() {
 
     return (
         <>
+            <div className="background-overlay" />
             <audio ref={audioRef} loop>
                 <source src="/background-audio/Lil Yachty - drive ME crazy! (Official Audio).mp3" type="audio/mpeg" />
             </audio>
