@@ -1120,7 +1120,7 @@ h6 {
   min-height: 100vh;
   position: relative;
   z-index: 1;
-  animation: main-page-fade 1.5s ease-out forwards;
+  animation: main-page-fade 0.8s ease-out forwards;
 }
 
 @keyframes main-page-fade {

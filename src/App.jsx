@@ -167,32 +167,41 @@ function App() {
 
             setLoadingProgress(progress);
 
+            // Start fading out Track 1 (Intro) at 75%
+            if (progress >= 75 && enterAudioRef.current) {
+                const fadeProgress = (progress - 75) / 25; // 0 to 1
+                enterAudioRef.current.volume = Math.max(0, 1 - fadeProgress);
+            }
+
             if (progress < 100) {
                 requestAnimationFrame(updateProgress);
             } else {
-                // Begin fading out Track 1 (Intro) the second loading hits 100
-                fadeOutAudio(enterAudioRef.current, 1000).then(() => {
-                    // Transition to Main Page once Track 1 is faded
-                    setLoading(false);
-                    setStarted(true);
+                // Ensure Track 1 is fully silent and paused at 100
+                if (enterAudioRef.current) {
+                    enterAudioRef.current.volume = 0;
+                    enterAudioRef.current.pause();
+                }
 
-                    if (mainAudioRef.current) {
-                        mainAudioRef.current.volume = 0;
-                        mainAudioRef.current.play().then(() => {
-                            // Track 2 (Main): Fade volume to 1.0 while page fades in
-                            let vol = 0;
-                            const fadeIn = setInterval(() => {
-                                if (vol < 0.95) {
-                                    vol += 0.05;
-                                    mainAudioRef.current.volume = vol;
-                                } else {
-                                    mainAudioRef.current.volume = 1;
-                                    clearInterval(fadeIn);
-                                }
-                            }, 100);
-                        }).catch(err => console.log('Main audio play failed:', err));
-                    }
-                });
+                // Proceed immediately to Main Page reveal
+                setLoading(false);
+                setStarted(true);
+
+                if (mainAudioRef.current) {
+                    mainAudioRef.current.volume = 0;
+                    mainAudioRef.current.play().then(() => {
+                        // Track 2 (Main): Snappy fade volume to 1.0 (Approx 0.5s total)
+                        let vol = 0;
+                        const fadeIn = setInterval(() => {
+                            if (vol < 0.9) {
+                                vol += 0.1;
+                                mainAudioRef.current.volume = vol;
+                            } else {
+                                mainAudioRef.current.volume = 1;
+                                clearInterval(fadeIn);
+                            }
+                        }, 50);
+                    }).catch(err => console.log('Main audio play failed:', err));
+                }
             }
         };
 
