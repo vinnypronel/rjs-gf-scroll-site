@@ -807,7 +807,7 @@ function Footer() {
                 <span className="footer-date" style={{
                     display: 'block',
                     fontFamily: "'Dancing Script', cursive",
-                    fontSize: '2rem',
+                    fontSize: '1.4rem',
                     marginTop: '0.5rem',
                     background: 'linear-gradient(135deg, #ff69b4, #8b5cf6)',
                     WebkitBackgroundClip: 'text',
