@@ -906,7 +906,7 @@ h6 {
 
 .footer-text {
   font-family: 'Dancing Script', cursive;
-  font-size: clamp(1.8rem, 5vw, 2.5rem);
+  font-size: clamp(2.5rem, 7vw, 3.5rem);
   font-weight: 700;
   color: var(--accent-pink);
   margin-top: 1rem;
