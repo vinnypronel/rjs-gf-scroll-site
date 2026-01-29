@@ -380,7 +380,11 @@ function HeroScreen({ onEnter }) {
         return () => clearInterval(interval);
     }, []);
 
-
+    // Show button after cinematic reveal
+    useEffect(() => {
+        const timer = setTimeout(() => setShowButton(true), 3500);
+        return () => clearTimeout(timer);
+    }, []);
     return (
         <motion.div
             className="hero"
