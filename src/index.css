@@ -790,7 +790,8 @@ h6 {
   width: 100px;
   height: 100px;
   animation: pulse-enhanced 1.2s ease-in-out infinite;
-  will-change: transform;
+  will-change: transform, filter;
+  filter: drop-shadow(0 0 15px rgba(255, 105, 180, 0.8)) drop-shadow(0 0 30px rgba(139, 92, 246, 0.6));
 }
 
 .heart path {
@@ -802,10 +803,12 @@ h6 {
   0%,
   100% {
     transform: scale(1);
+    filter: drop-shadow(0 0 15px rgba(255, 105, 180, 0.8)) drop-shadow(0 0 30px rgba(139, 92, 246, 0.6));
   }
 
   50% {
-    transform: scale(1.2);
+    transform: scale(1.25);
+    filter: drop-shadow(0 0 30px rgba(255, 105, 180, 1)) drop-shadow(0 0 60px rgba(139, 92, 246, 0.8)) drop-shadow(0 0 100px rgba(255, 105, 180, 0.6));
   }
 }
 
