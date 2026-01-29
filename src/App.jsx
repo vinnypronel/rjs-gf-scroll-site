@@ -58,6 +58,7 @@ const FloatingHearts = memo(() => {
 });
 
 function App() {
+    const [gateStarted, setGateStarted] = useState(false);
     const [started, setStarted] = useState(false);
     const [loading, setLoading] = useState(false);
     const [loadingProgress, setLoadingProgress] = useState(0);
@@ -189,19 +190,12 @@ function App() {
         requestAnimationFrame(updateProgress);
     };
 
-    // Auto-play enter song on first interaction/mount if possible
-    useEffect(() => {
-        const playEnter = () => {
-            if (enterAudioRef.current && !started) {
-                enterAudioRef.current.play().catch(() => { });
-                // Once started, remove all listeners to prevent multiple plays
-                events.forEach(event => window.removeEventListener(event, playEnter));
-            }
-        };
-        const events = ['click', 'touchstart', 'mousedown', 'keydown'];
-        events.forEach(event => window.addEventListener(event, playEnter, { once: true }));
-        return () => events.forEach(event => window.removeEventListener(event, playEnter));
-    }, [started]);
+    const handleStart = () => {
+        setGateStarted(true);
+        if (enterAudioRef.current) {
+            enterAudioRef.current.play().catch(e => console.log('Audio play failed:', e));
+        }
+    };
 
     return (
         <>
@@ -216,15 +210,21 @@ function App() {
             </audio>
 
             <AnimatePresence mode="wait">
-                {loading && (
-                    <LoadingScreen key="loading" progress={loadingProgress} />
-                )}
-                {!started && !loading && (
-                    <HeroScreen key="hero" onEnter={handleEnter} />
+                {!gateStarted ? (
+                    <InitialGate key="gate" onStart={handleStart} />
+                ) : (
+                    <>
+                        {loading && (
+                            <LoadingScreen key="loading" progress={loadingProgress} />
+                        )}
+                        {!started && !loading && (
+                            <HeroScreen key="hero" onEnter={handleEnter} />
+                        )}
+                    </>
                 )}
             </AnimatePresence>
 
-            {started && !loading && (
+            {started && !loading && gateStarted && (
                 <div className="scroll-container main-page-mask">
                     <PrimaryGallery />
                     <MessageSection />
@@ -234,6 +234,41 @@ function App() {
                 </div>
             )}
         </>
+    );
+}
+
+// Initial landing screen to solve auto-play
+function InitialGate({ onStart }) {
+    return (
+        <motion.div
+            className="initial-gate"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0, scale: 1.05 }}
+            transition={{ duration: 1.2, ease: "easeInOut" }}
+        >
+            <div className="gate-content">
+                <motion.h1
+                    className="gate-title glowing-text"
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.5, duration: 1 }}
+                >
+                    Sight and Sound
+                </motion.h1>
+                <motion.button
+                    className="gate-button"
+                    onClick={onStart}
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 1, duration: 0.8 }}
+                    whileHover={{ scale: 1.05, backgroundColor: "rgba(255,255,255,1)", color: "#000" }}
+                    whileTap={{ scale: 0.95 }}
+                >
+                    Start
+                </motion.button>
+            </div>
+        </motion.div>
     );
 }
 
