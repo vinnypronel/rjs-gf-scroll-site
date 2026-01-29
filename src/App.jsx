@@ -266,21 +266,22 @@ function InitialGate({ onStart }) {
             transition={{ duration: 1.2, ease: "easeInOut" }}
         >
             <div className="gate-content">
-                <h1 className="gate-title glowing-text">
-                    {displayedTitle}
-                    {displayedTitle.length < fullTitle.length && (
-                        <span className="cursor-blink">|</span>
-                    )}
-                </h1>
+                <div className="gate-section">
+                    <h1 className="gate-title glowing-text">
+                        {displayedTitle}
+                        {displayedTitle.length < fullTitle.length && (
+                            <span className="cursor-blink">|</span>
+                        )}
+                    </h1>
+                </div>
 
-                <AnimatePresence>
-                    {showElements && (
-                        <motion.div
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 1 }}
-                        >
+                <div className="gate-section">
+                    <AnimatePresence>
+                        {showElements && (
                             <motion.button
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.8 }}
                                 className="gate-button"
                                 onClick={onStart}
                                 whileHover={{ scale: 1.05, backgroundColor: "rgba(255,255,255,1)", color: "#000" }}
@@ -288,12 +289,24 @@ function InitialGate({ onStart }) {
                             >
                                 Start
                             </motion.button>
-                            <div className="heart-container" style={{ marginTop: '3rem' }}>
+                        )}
+                    </AnimatePresence>
+                </div>
+
+                <div className="gate-section">
+                    <AnimatePresence>
+                        {showElements && (
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.5 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                transition={{ duration: 0.8, delay: 0.3 }}
+                                className="heart-container"
+                            >
                                 <HeartSVG className="heart" />
-                            </div>
-                        </motion.div>
-                    )}
-                </AnimatePresence>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                </div>
             </div>
         </motion.div>
     );
