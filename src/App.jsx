@@ -278,17 +278,17 @@ function InitialGate({ onStart }) {
                                 animate={{
                                     opacity: 1,
                                     y: 0,
-                                    scale: [1, 1.2, 1],
+                                    scale: [1, 1.3, 1],
                                 }}
                                 transition={{
                                     opacity: { duration: 0.8, delay: 0 },
                                     y: { duration: 0.8, delay: 0 },
-                                    scale: { duration: 2.0, repeat: Infinity, ease: "easeInOut", delay: 0 } // Syncs with heart
+                                    scale: { duration: 2.5, repeat: Infinity, ease: "easeInOut", delay: 0 }
                                 }}
                                 className="gate-button"
                                 onClick={onStart}
                                 whileHover={{
-                                    scale: 1.25,
+                                    scale: 1.35,
                                     backgroundColor: "#ff1493",
                                     color: "#fff",
                                     boxShadow: "0 0 50px rgba(255, 20, 147, 1)"
@@ -310,7 +310,7 @@ function InitialGate({ onStart }) {
                                     opacity: 1,
                                 }}
                                 transition={{
-                                    opacity: { duration: 0.8, delay: 0.6 }, // Fades in AFTER button
+                                    opacity: { duration: 1.5, delay: 1.2 }, // Much later and slower fade in
                                 }}
                                 className="heart-container"
                             >
@@ -320,7 +320,7 @@ function InitialGate({ onStart }) {
                                         scale: [2.0, 4.5, 2.0],
                                         opacity: [0.8, 1, 0.8],
                                     }}
-                                    transition={{ duration: 2.0, repeat: Infinity, ease: "easeInOut", delay: 0 }} // Syncs with button
+                                    transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut", delay: 0 }}
                                     style={{
                                         position: 'absolute',
                                         width: '100px',
@@ -334,7 +334,7 @@ function InitialGate({ onStart }) {
                                 />
                                 <motion.div
                                     animate={{ scale: [2.2, 2.8, 2.2] }}
-                                    transition={{ duration: 2.0, repeat: Infinity, ease: "easeInOut", delay: 0 }} // Syncs with button
+                                    transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut", delay: 0 }}
                                     style={{ zIndex: 1 }}
                                 >
                                     <HeartSVG className="heart" />
