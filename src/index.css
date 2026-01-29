@@ -1029,7 +1029,7 @@ h6 {
 }
 
 .main-page-mask {
-  background: rgba(0, 0, 0, 0.45);
+  background: rgba(0, 0, 0, 0.7);
   min-height: 100vh;
   position: relative;
   z-index: 1;
