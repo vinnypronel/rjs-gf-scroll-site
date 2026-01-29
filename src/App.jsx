@@ -283,7 +283,7 @@ function InitialGate({ onStart }) {
                                 transition={{
                                     opacity: { duration: 0.8, delay: 0 },
                                     y: { duration: 0.8, delay: 0 },
-                                    scale: { duration: 2.5, repeat: Infinity, ease: "easeInOut", delay: 0 }
+                                    scale: { duration: 1.5, repeat: Infinity, ease: "easeInOut", delay: 0 } // Increased speed to 1.5s
                                 }}
                                 className="gate-button"
                                 onClick={onStart}
@@ -310,7 +310,7 @@ function InitialGate({ onStart }) {
                                     opacity: 1,
                                 }}
                                 transition={{
-                                    opacity: { duration: 1.5, delay: 1.2 }, // Much later and slower fade in
+                                    opacity: { duration: 1.5, delay: 1.2 }, // Delayed fade in
                                 }}
                                 className="heart-container"
                             >
@@ -320,7 +320,7 @@ function InitialGate({ onStart }) {
                                         scale: [2.0, 4.5, 2.0],
                                         opacity: [0.8, 1, 0.8],
                                     }}
-                                    transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut", delay: 0 }}
+                                    transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut", delay: 0 }} // Synced 1.5s
                                     style={{
                                         position: 'absolute',
                                         width: '100px',
@@ -334,7 +334,7 @@ function InitialGate({ onStart }) {
                                 />
                                 <motion.div
                                     animate={{ scale: [2.2, 2.8, 2.2] }}
-                                    transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut", delay: 0 }}
+                                    transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut", delay: 0 }} // Synced 1.5s
                                     style={{ zIndex: 1 }}
                                 >
                                     <HeartSVG className="heart" />
@@ -516,10 +516,10 @@ function HeroScreen({ onEnter }) {
                 </CinematicText>
 
                 <CinematicText className="hero-subtitle glowing-subtitle" delay={1.5}>
-                    {"A special message just for you"}
+                    {"A special message,\njust for you"}
                 </CinematicText>
 
-                <div style={{ height: '80px', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', position: 'relative' }}>
+                <div style={{ marginTop: '-10px', height: '80px', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', position: 'relative' }}>
                     <motion.button
                         id="enter-btn"
                         className={`enter-button`}
