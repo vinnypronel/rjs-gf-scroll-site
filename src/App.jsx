@@ -519,7 +519,7 @@ function Footer() {
                     />
                 </svg>
             </div>
-            <p className="footer-text special-message-title">Made with love, Bubby</p>
+            <p className="footer-text">Made with love, Bubby</p>
         </footer>
     );
 }

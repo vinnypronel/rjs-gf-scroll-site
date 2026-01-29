@@ -831,11 +831,17 @@ h6 {
 }
 
 .footer-text {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.8rem;
-  font-weight: 800;
+  font-family: 'Dancing Script', cursive;
+  font-size: clamp(1.8rem, 5vw, 2.5rem);
+  font-weight: 700;
   color: var(--accent-pink);
   margin-top: 1rem;
+  white-space: nowrap;
+  /* Forces onto one line */
+  background: linear-gradient(135deg, #ff69b4, #8b5cf6);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 /* Responsive */
