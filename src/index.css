@@ -191,7 +191,7 @@ h6 {
   font-family: 'Playfair Display', serif !important;
   font-size: clamp(4rem, 15vw, 9rem);
   font-weight: 700;
-  margin-top: calc(10vh - 42px);
+  margin-top: calc(10vh - 62px);
   margin-bottom: 0.5rem;
   text-align: center;
   /* Matching the pink glow from the image */
