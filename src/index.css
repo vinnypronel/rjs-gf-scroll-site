@@ -1099,12 +1099,28 @@ h6 {
   letter-spacing: 0.35em;
   background: transparent;
   color: white;
-  border: 2px solid rgba(255, 255, 255, 0.6);
+  border: 3px solid rgba(255, 255, 255, 0.8);
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
   box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
-  animation: border-breathing 2.5s ease-in-out infinite;
+  animation: gate-breathing 2.5s ease-in-out infinite;
+}
+
+@keyframes gate-breathing {
+
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.6);
+  }
+
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 40px rgba(255, 255, 255, 0.4);
+    border-color: rgba(255, 255, 255, 1);
+  }
 }
 
 .gate-button:hover {
@@ -1112,4 +1128,5 @@ h6 {
   color: black;
   box-shadow: 0 0 40px rgba(255, 255, 255, 0.5);
   border-color: white;
+  animation-play-state: paused;
 }
