@@ -61,13 +61,13 @@ body {
 
   /* The Atmospheric Stack: Mask + Glows + Gradient Base */
   background:
-    /* The Darkening Mask */
-    linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
-    /* The Glows */
-    radial-gradient(circle at 20% 30%, rgba(255, 20, 147, 0.2) 0%, transparent 60%),
-    radial-gradient(circle at 80% 70%, rgba(138, 43, 226, 0.2) 0%, transparent 60%),
-    /* The Base Gradient */
-    linear-gradient(135deg, #4a0e36 0%, #1a0b5a 100%);
+    /* The Darkening Mask - Significantly lighter (0.45 instead of 0.6) */
+    linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)),
+    /* The Glows - More prominent (0.3 instead of 0.2) */
+    radial-gradient(circle at 20% 30%, rgba(255, 20, 147, 0.3) 0%, transparent 65%),
+    radial-gradient(circle at 80% 70%, rgba(138, 43, 226, 0.3) 0%, transparent 65%),
+    /* The Base Gradient - Brighter colors */
+    linear-gradient(135deg, #6b21a8 0%, #4338ca 100%);
 
   background-size: cover;
 }
