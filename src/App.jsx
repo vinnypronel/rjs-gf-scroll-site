@@ -26,10 +26,10 @@ const HeartSVG = ({ className }) => (
 const CinematicText = ({ children, delay = 0, className = "" }) => {
     return (
         <motion.div
-            initial={{ opacity: 0, filter: 'blur(10px)', y: 15 }}
+            initial={{ opacity: 0, filter: 'blur(20px)', y: 20 }}
             animate={{ opacity: 1, filter: 'blur(0px)', y: 0 }}
             transition={{
-                duration: 1.2,
+                duration: 1.8,
                 delay,
                 ease: [0.2, 0.8, 0.2, 1]
             }}
@@ -444,7 +444,8 @@ function HeroScreen({ onEnter }) {
                 <AnimatePresence>
                     {showButton && (
                         <motion.button
-                            className="enter-button glowing-button mega-glow"
+                            id="enter-btn"
+                            className={`enter-button glowing-button mega-glow ${showButton ? 'show' : ''}`}
                             onClick={onEnter}
                             initial={{ y: 20, opacity: 0 }}
                             animate={{
@@ -452,7 +453,7 @@ function HeroScreen({ onEnter }) {
                                 opacity: 1,
                             }}
                             transition={{
-                                duration: 1.5, // Slow fade
+                                duration: 1.0,
                                 ease: "easeOut"
                             }}
                             whileHover={{
