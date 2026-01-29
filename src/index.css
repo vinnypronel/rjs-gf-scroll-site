@@ -61,13 +61,13 @@ body {
 
   /* The Atmospheric Stack: Mask + Glows + Gradient Base */
   background:
-    /* The Darkening Mask - Significantly lighter (0.45 instead of 0.6) */
-    linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)),
-    /* The Glows - More prominent (0.3 instead of 0.2) */
-    radial-gradient(circle at 20% 30%, rgba(255, 20, 147, 0.3) 0%, transparent 65%),
-    radial-gradient(circle at 80% 70%, rgba(138, 43, 226, 0.3) 0%, transparent 65%),
-    /* The Base Gradient - Brighter colors */
-    linear-gradient(135deg, #6b21a8 0%, #4338ca 100%);
+    /* The Darkening Mask - Much lighter (0.35) */
+    linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.35)),
+    /* The Glows - Maxed out (0.35 intensity and 70% spread) */
+    radial-gradient(circle at 20% 30%, rgba(255, 20, 147, 0.35) 0%, transparent 70%),
+    radial-gradient(circle at 80% 70%, rgba(138, 43, 226, 0.35) 0%, transparent 70%),
+    /* The Base Gradient - Electric Violet to Royal Blue */
+    linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%);
 
   background-size: cover;
 }
@@ -796,12 +796,16 @@ h6 {
   0%,
   100% {
     transform: scale(1);
-    opacity: 0.5;
+    opacity: 0.7;
+    filter: blur(15px);
   }
 
   50% {
-    transform: scale(1.5);
-    opacity: 0.9;
+    transform: scale(2.2);
+    /* Much larger expansion */
+    opacity: 1;
+    filter: blur(25px);
+    /* More diffused glow */
   }
 }
 
