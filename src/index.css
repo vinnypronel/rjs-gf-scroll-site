@@ -229,24 +229,52 @@ h6 {
 }
 
 .enter-button {
-  padding: 1rem 3.5rem;
+  padding: 1.2rem 4rem;
   font-family: 'Dancing Script', cursive;
-  font-size: 2.4rem;
+  font-size: 2.6rem;
   font-weight: 700;
   background: linear-gradient(135deg, #ff69b4, #8b5cf6);
   color: white;
   border: none;
   border-radius: 50px;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: background 0.3s ease, box-shadow 0.3s ease;
   text-transform: capitalize;
-  /* Better for script fonts */
   letter-spacing: 0.05em;
   box-shadow: 0 10px 40px rgba(255, 105, 180, 0.3);
   position: relative;
   overflow: hidden;
   line-height: 1;
-  /* Fix vertical alignment for script */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.enter-button::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -60%;
+  width: 20%;
+  height: 200%;
+  background: rgba(255, 255, 255, 0.2);
+  transform: rotate(30deg);
+  animation: shimmer-sweep 3s infinite;
+  pointer-events: none;
+}
+
+@keyframes shimmer-sweep {
+  0% {
+    left: -60%;
+  }
+
+  30% {
+    left: 140%;
+  }
+
+  100% {
+    left: 140%;
+  }
 }
 
 /* Glowing Button Animation */
@@ -693,6 +721,20 @@ h6 {
   -webkit-mask-image: -webkit-radial-gradient(white, black);
   mask-image: radial-gradient(white, black);
   isolation: isolate;
+  box-shadow: 0 0 50px rgba(255, 105, 180, 0.3), 0 0 100px rgba(139, 92, 246, 0.1);
+  animation: video-breathing-glow 4s ease-in-out infinite;
+}
+
+@keyframes video-breathing-glow {
+
+  0%,
+  100% {
+    box-shadow: 0 0 40px rgba(255, 105, 180, 0.2), 0 0 80px rgba(139, 92, 246, 0.1);
+  }
+
+  50% {
+    box-shadow: 0 0 70px rgba(255, 105, 180, 0.5), 0 0 140px rgba(139, 92, 246, 0.2);
+  }
 }
 
 .main-video {
@@ -839,59 +881,23 @@ h6 {
   position: relative;
 }
 
-/* Glow behind the heart - more stable than SVG filters on Safari */
-.heart-container::before {
-  content: '';
-  position: absolute;
-  width: 100px;
-  height: 100px;
-  background: radial-gradient(circle, rgba(255, 105, 180, 0.4) 0%, rgba(139, 92, 246, 0.2) 50%, transparent 70%);
-  filter: blur(15px);
-  z-index: 0;
-  animation: heart-glow-pulse 2.5s ease-in-out infinite;
-  pointer-events: none;
-}
-
-@keyframes heart-glow-pulse {
-
-  0%,
-  100% {
-    transform: scale(1);
-    opacity: 0.7;
-    filter: blur(15px);
-  }
-
-  50% {
-    transform: scale(2.2);
-    /* Much larger expansion */
-    opacity: 1;
-    filter: blur(25px);
-    /* More diffused glow */
-  }
+/* Heart Container Base */
+.heart-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
 }
 
 .heart {
   width: 100px;
   height: 100px;
-  animation: heart-scale-pulse 2.5s ease-in-out infinite;
   will-change: transform;
   z-index: 1;
 }
 
 .heart path {
   fill: url(#heartGradient);
-}
-
-@keyframes heart-scale-pulse {
-
-  0%,
-  100% {
-    transform: scale(1);
-  }
-
-  50% {
-    transform: scale(1.25);
-  }
 }
 
 .footer-text {
@@ -945,27 +951,46 @@ h6 {
   width: 100%;
   height: 100%;
   background:
-    linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
-    radial-gradient(circle at 15% 25%, rgba(255, 0, 150, 0.5) 0%, transparent 55%),
-    radial-gradient(circle at 85% 75%, rgba(150, 0, 255, 0.5) 0%, transparent 55%),
-    radial-gradient(circle at 50% 50%, rgba(255, 105, 180, 0.2) 0%, transparent 60%),
-    linear-gradient(135deg, #4d1b3d 0%, #1b1a4d 100%);
+    radial-gradient(circle at 15% 25%, rgba(255, 0, 150, 0.4) 0%, transparent 55%),
+    radial-gradient(circle at 85% 75%, rgba(150, 0, 255, 0.4) 0%, transparent 55%),
+    linear-gradient(135deg, #1a0b16 0%, #0b0b1a 100%);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   z-index: 10000;
-  gap: 2rem;
+  overflow: hidden;
+}
+
+.loading-glass-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 1;
+}
+
+.loading-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2.5rem;
 }
 
 .loading-bar-container {
-  width: 300px;
-  height: 12px;
-  background: rgba(255, 255, 255, 0.15);
-  border-radius: 20px;
+  width: 350px;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
   overflow: hidden;
   position: relative;
-  box-shadow: 0 0 30px rgba(0, 0, 0, 0.6);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -973,32 +998,23 @@ h6 {
   height: 100%;
   background: linear-gradient(90deg, #ff69b4, #8b5cf6, #ff69b4);
   background-size: 200% 100%;
-  animation: loading-gradient 2s linear infinite;
   width: 0%;
-  box-shadow: 0 0 20px rgba(255, 105, 180, 0.9);
-}
-
-@keyframes loading-gradient {
-  0% {
-    background-position: 0% 50%;
-  }
-
-  100% {
-    background-position: 200% 50%;
-  }
+  box-shadow: 0 0 25px rgba(255, 105, 180, 0.8), 0 0 10px rgba(139, 92, 246, 1);
+  border-radius: 10px;
 }
 
 .loading-percentage {
   font-family: 'Playfair Display', serif;
-  font-size: 5rem;
+  font-size: clamp(4rem, 12vw, 7rem);
   font-weight: 700;
-  background: linear-gradient(135deg, #ff69b4, #8b5cf6);
+  background: linear-gradient(135deg, #fff, #ff69b4);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
   margin: 0;
   line-height: 1;
-  text-shadow: 0 0 30px rgba(255, 105, 180, 0.3);
+  letter-spacing: -0.05em;
+  filter: drop-shadow(0 0 20px rgba(255, 105, 180, 0.4));
 }
 
 .loading-heart-container {
@@ -1187,43 +1203,26 @@ h6 {
 }
 
 .gate-button {
-  padding: 1.5rem 6.5rem;
+  padding: 1.2rem 5rem;
   font-family: 'Inter', sans-serif;
-  font-size: 1.6rem;
+  font-size: 1.4rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.35em;
-  background: transparent;
-  color: #ff1493;
-  /* Darker Pink */
-  border: 3px solid rgba(255, 20, 147, 0.8);
-  border-radius: 8px;
+  letter-spacing: 0.4em;
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
   cursor: pointer;
-  transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
-  box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
-  animation: gate-breathing 2.5s ease-in-out infinite;
-}
-
-@keyframes gate-breathing {
-
-  0%,
-  100% {
-    transform: scale(1);
-    box-shadow: 0 0 20px rgba(255, 20, 147, 0.2);
-    border-color: rgba(255, 20, 147, 0.6);
-  }
-
-  50% {
-    transform: scale(1.05);
-    box-shadow: 0 0 40px rgba(255, 20, 147, 0.4);
-    border-color: rgba(255, 20, 147, 1);
-  }
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
 }
 
 .gate-button:hover {
-  background: #ff1493;
-  color: white;
-  box-shadow: 0 0 40px rgba(255, 20, 147, 0.5);
-  border-color: #ff1493;
-  animation-play-state: paused;
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 0 30px rgba(255, 105, 180, 0.4);
+  transform: translateY(-2px);
 }

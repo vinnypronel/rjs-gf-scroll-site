@@ -167,12 +167,6 @@ function App() {
 
             setLoadingProgress(progress);
 
-            // Start fading out Track 1 (Intro) at 75%
-            if (progress >= 75 && enterAudioRef.current) {
-                const fadeProgress = (progress - 75) / 25; // 0 to 1
-                enterAudioRef.current.volume = Math.max(0, 1 - fadeProgress);
-            }
-
             if (progress < 100) {
                 requestAnimationFrame(updateProgress);
             } else {
@@ -209,6 +203,8 @@ function App() {
     };
 
     const handleStart = () => {
+        // Enforce state sanity
+        setLoading(false);
         setGateStarted(true);
         if (enterAudioRef.current) {
             enterAudioRef.current.play().catch(e => console.log('Audio play failed:', e));
@@ -230,16 +226,11 @@ function App() {
             <AnimatePresence mode="wait">
                 {!gateStarted ? (
                     <InitialGate key="gate" onStart={handleStart} />
-                ) : (
-                    <>
-                        {loading && (
-                            <LoadingScreen key="loading" progress={loadingProgress} />
-                        )}
-                        {!started && !loading && (
-                            <HeroScreen key="hero" onEnter={handleEnter} />
-                        )}
-                    </>
-                )}
+                ) : (!loading && !started) ? (
+                    <HeroScreen key="hero" onEnter={handleEnter} />
+                ) : loading ? (
+                    <LoadingScreen key="loading" progress={loadingProgress} />
+                ) : null}
             </AnimatePresence>
 
             {started && !loading && gateStarted && (
@@ -284,11 +275,24 @@ function InitialGate({ onStart }) {
                         {showElements && (
                             <motion.button
                                 initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.8 }}
+                                animate={{
+                                    opacity: 1,
+                                    y: 0,
+                                    scale: [1, 1.03, 1],
+                                }}
+                                transition={{
+                                    opacity: { duration: 0.8 },
+                                    y: { duration: 0.8 },
+                                    scale: { duration: 2.5, repeat: Infinity, ease: "easeInOut" }
+                                }}
                                 className="gate-button"
                                 onClick={onStart}
-                                whileHover={{ scale: 1.05, backgroundColor: "rgba(255,255,255,1)", color: "#000" }}
+                                whileHover={{
+                                    scale: 1.1,
+                                    backgroundColor: "rgba(255, 20, 147, 1)",
+                                    color: "#fff",
+                                    boxShadow: "0 0 30px rgba(255, 20, 147, 0.6)"
+                                }}
                                 whileTap={{ scale: 0.95 }}
                             >
                                 Start
@@ -302,11 +306,38 @@ function InitialGate({ onStart }) {
                         {showElements && (
                             <motion.div
                                 initial={{ opacity: 0, scale: 0.5 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                transition={{ duration: 0.8, delay: 0.3 }}
+                                animate={{
+                                    opacity: 1,
+                                }}
+                                transition={{
+                                    opacity: { duration: 0.8 },
+                                }}
                                 className="heart-container"
                             >
-                                <HeartSVG className="heart" />
+                                <motion.div
+                                    className="heart-glow-motion"
+                                    animate={{
+                                        scale: [1, 2.2, 1],
+                                        opacity: [0.7, 1, 0.7],
+                                    }}
+                                    transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
+                                    style={{
+                                        position: 'absolute',
+                                        width: '100px',
+                                        height: '100px',
+                                        background: 'radial-gradient(circle, rgba(255, 105, 180, 0.4) 0%, rgba(139, 92, 246, 0.2) 50%, transparent 70%)',
+                                        filter: 'blur(15px)',
+                                        zIndex: 0,
+                                        pointerEvents: 'none'
+                                    }}
+                                />
+                                <motion.div
+                                    animate={{ scale: [1, 1.25, 1] }}
+                                    transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
+                                    style={{ zIndex: 1 }}
+                                >
+                                    <HeartSVG className="heart" />
+                                </motion.div>
                             </motion.div>
                         )}
                     </AnimatePresence>
@@ -327,21 +358,49 @@ function LoadingScreen({ progress }) {
             transition={{ duration: 0.8 }}
             style={{ zIndex: 30000 }}
         >
+            <div className="loading-glass-overlay" />
             <FloatingHearts />
 
-            <CinematicText className="loading-percentage">
-                {Math.round(progress)}%
-            </CinematicText>
+            <div className="loading-content">
+                <CinematicText className="loading-percentage">
+                    {Math.round(progress)}%
+                </CinematicText>
 
-            <div className="loading-bar-container">
-                <div
-                    className="loading-bar-fill"
-                    style={{ width: `${progress}%` }}
-                />
-            </div>
+                <div className="loading-bar-container">
+                    <motion.div
+                        className="loading-bar-fill"
+                        initial={{ width: 0 }}
+                        animate={{ width: `${progress}%` }}
+                        transition={{ type: "spring", bounce: 0, duration: 0.4 }}
+                    />
+                </div>
 
-            <div className="heart-container">
-                <HeartSVG className="heart" />
+                <div className="heart-container">
+                    <motion.div
+                        className="heart-glow-motion"
+                        animate={{
+                            scale: [1, 2.2, 1],
+                            opacity: [0.7, 1, 0.7],
+                        }}
+                        transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+                        style={{
+                            position: 'absolute',
+                            width: '100px',
+                            height: '100px',
+                            background: 'radial-gradient(circle, rgba(255, 105, 180, 0.4) 0%, rgba(139, 92, 246, 0.2) 50%, transparent 70%)',
+                            filter: 'blur(15px)',
+                            zIndex: 0,
+                            pointerEvents: 'none'
+                        }}
+                    />
+                    <motion.div
+                        animate={{ scale: [1, 1.25, 1] }}
+                        transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+                        style={{ zIndex: 1 }}
+                    >
+                        <HeartSVG className="heart" />
+                    </motion.div>
+                </div>
             </div>
         </motion.div>
     );
@@ -387,8 +446,8 @@ function HeroScreen({ onEnter }) {
             className="hero"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            exit={{ opacity: 0, scale: 1.01 }} // Solid performance improvement
-            transition={{ duration: 0.5 }}
+            exit={{ opacity: 0, scale: 1.05 }} // More dramatic exit
+            transition={{ duration: 0.8, ease: "easeInOut" }}
         >
             {/* High-Performance Slideshow */}
             <div className="hero-bg-container">
@@ -445,23 +504,30 @@ function HeroScreen({ onEnter }) {
                 {showButton && (
                     <motion.button
                         id="enter-btn"
-                        className={`enter-button glowing-button mega-glow show`}
+                        className={`enter-button show`} /* Removed CSS classes that might conflict */
                         onClick={onEnter}
                         initial={{ y: 20, opacity: 0 }}
                         animate={{
                             y: 0,
                             opacity: 1,
+                            scale: [1, 1.05, 1],
+                            boxShadow: [
+                                "0 0 20px rgba(255, 105, 180, 0.4)",
+                                "0 0 40px rgba(255, 105, 180, 0.8)",
+                                "0 0 20px rgba(255, 105, 180, 0.4)"
+                            ]
                         }}
                         transition={{
-                            duration: 1.0,
-                            ease: "easeOut"
+                            y: { duration: 1.0, ease: "easeOut" },
+                            opacity: { duration: 1.0 },
+                            scale: { duration: 2, repeat: Infinity, ease: "easeInOut" },
+                            boxShadow: { duration: 2, repeat: Infinity, ease: "easeInOut" }
                         }}
                         whileHover={{
-                            scale: 1.15,
-                            rotate: [0, -2, 2, -2, 0],
-                            transition: { duration: 0.3 }
+                            scale: 1.12,
+                            transition: { duration: 0.2 }
                         }}
-                        whileTap={{ scale: 0.9 }}
+                        whileTap={{ scale: 0.95 }}
                     >
                         <motion.span
                             animate={{
@@ -693,7 +759,30 @@ function Footer() {
             </h2>
 
             <div className="heart-container">
-                <HeartSVG className="heart" />
+                <motion.div
+                    className="heart-glow-motion"
+                    animate={{
+                        scale: [1, 2.2, 1],
+                        opacity: [0.7, 1, 0.7],
+                    }}
+                    transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+                    style={{
+                        position: 'absolute',
+                        width: '100px',
+                        height: '100px',
+                        background: 'radial-gradient(circle, rgba(255, 105, 180, 0.4) 0%, rgba(139, 92, 246, 0.2) 50%, transparent 70%)',
+                        filter: 'blur(15px)',
+                        zIndex: 0,
+                        pointerEvents: 'none'
+                    }}
+                />
+                <motion.div
+                    animate={{ scale: [1, 1.25, 1] }}
+                    transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+                    style={{ zIndex: 1 }}
+                >
+                    <HeartSVG className="heart" />
+                </motion.div>
             </div>
             <p className="footer-text">Made with love, Bubby</p>
         </footer>
