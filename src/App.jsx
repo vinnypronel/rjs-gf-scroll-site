@@ -516,10 +516,10 @@ function HeroScreen({ onEnter }) {
                 </CinematicText>
 
                 <CinematicText className="hero-subtitle glowing-subtitle" delay={1.5}>
-                    {"A special message\njust for you"}
+                    A special message<br />just for you
                 </CinematicText>
 
-                <div style={{ marginTop: '-60px', height: '80px', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', position: 'relative' }}>
+                <div style={{ marginTop: '-85px', height: '80px', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', position: 'relative' }}>
                     <motion.button
                         id="enter-btn"
                         className={`enter-button`}
