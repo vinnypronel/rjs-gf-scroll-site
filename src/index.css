@@ -59,15 +59,11 @@ body {
   z-index: -1;
   pointer-events: none;
 
-  /* The Atmospheric Stack: Mask + Glows + Gradient Base */
+  /* Restored Vibrant Atmospheric Stack */
   background:
-    /* The Darkening Mask - Much lighter (0.35) */
-    linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.35)),
-    /* The Glows - Maxed out (0.35 intensity and 70% spread) */
-    radial-gradient(circle at 20% 30%, rgba(255, 20, 147, 0.35) 0%, transparent 70%),
-    radial-gradient(circle at 80% 70%, rgba(138, 43, 226, 0.35) 0%, transparent 70%),
-    /* The Base Gradient - Electric Violet to Royal Blue */
-    linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%);
+    radial-gradient(circle at 20% 30%, rgba(255, 105, 180, 0.4) 0%, transparent 60%),
+    radial-gradient(circle at 80% 70%, rgba(139, 92, 246, 0.4) 0%, transparent 60%),
+    linear-gradient(135deg, #2d1b4d 0%, #1a0b2e 100%);
 
   background-size: cover;
 }
