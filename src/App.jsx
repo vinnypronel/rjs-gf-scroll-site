@@ -226,7 +226,7 @@ function App() {
             <AnimatePresence mode="wait">
                 {!gateStarted ? (
                     <InitialGate key="gate" onStart={handleStart} />
-                ) : (!loading && !started) ? (
+                ) : (gateStarted && !loading && !started) ? (
                     <HeroScreen key="hero" onEnter={handleEnter} />
                 ) : loading ? (
                     <LoadingScreen key="loading" progress={loadingProgress} />
@@ -278,7 +278,7 @@ function InitialGate({ onStart }) {
                                 animate={{
                                     opacity: 1,
                                     y: 0,
-                                    scale: [1, 1.03, 1],
+                                    scale: [1, 1.1, 1],
                                 }}
                                 transition={{
                                     opacity: { duration: 0.8 },
@@ -288,10 +288,10 @@ function InitialGate({ onStart }) {
                                 className="gate-button"
                                 onClick={onStart}
                                 whileHover={{
-                                    scale: 1.1,
-                                    backgroundColor: "rgba(255, 20, 147, 1)",
+                                    scale: 1.15,
+                                    backgroundColor: "#ff1493",
                                     color: "#fff",
-                                    boxShadow: "0 0 30px rgba(255, 20, 147, 0.6)"
+                                    boxShadow: "0 0 40px rgba(255, 20, 147, 0.8)"
                                 }}
                                 whileTap={{ scale: 0.95 }}
                             >
@@ -317,23 +317,23 @@ function InitialGate({ onStart }) {
                                 <motion.div
                                     className="heart-glow-motion"
                                     animate={{
-                                        scale: [1, 2.2, 1],
-                                        opacity: [0.7, 1, 0.7],
+                                        scale: [2.5, 3.5, 2.5],
+                                        opacity: [0.5, 0.8, 0.5],
                                     }}
-                                    transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
+                                    transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
                                     style={{
                                         position: 'absolute',
                                         width: '100px',
                                         height: '100px',
-                                        background: 'radial-gradient(circle, rgba(255, 105, 180, 0.4) 0%, rgba(139, 92, 246, 0.2) 50%, transparent 70%)',
-                                        filter: 'blur(15px)',
+                                        background: 'radial-gradient(circle, rgba(255, 105, 180, 0.5) 0%, rgba(139, 92, 246, 0.3) 50%, transparent 70%)',
+                                        filter: 'blur(25px)',
                                         zIndex: 0,
                                         pointerEvents: 'none'
                                     }}
                                 />
                                 <motion.div
-                                    animate={{ scale: [1, 1.25, 1] }}
-                                    transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
+                                    animate={{ scale: [2.2, 2.5, 2.2] }}
+                                    transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
                                     style={{ zIndex: 1 }}
                                 >
                                     <HeartSVG className="heart" />
@@ -407,34 +407,51 @@ function LoadingScreen({ progress }) {
 }
 
 // Animated Hero Screen Component with Slideshow & Floating Hearts
+// Animated Hero Screen Component with Slideshow & Floating Hearts
 function HeroScreen({ onEnter }) {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [showButton, setShowButton] = useState(false);
+    const [imagesLoaded, setImagesLoaded] = useState(false);
 
-    const heroImages = [
+    const heroImages = useMemo(() => [
         '/images/272F9FA0-793B-4852-B23F-18D3D642AC95.JPEG',
         '/images/IMG_2184.JPEG',
         '/images/IMG_7715.jpg',
         '/images/IMG_9303.jpg',
         '/images/IMG_9507.jpg',
         '/images/IMG_9543.jpg',
-    ];
+    ], []);
 
-    // Image Preloading
+    // Robust Image Preloading
     useEffect(() => {
-        heroImages.forEach((img) => {
-            const image = new Image();
-            image.src = img;
+        let loadedCount = 0;
+        const totalImages = heroImages.length;
+
+        heroImages.forEach((src) => {
+            const img = new Image();
+            img.src = src;
+            img.onload = () => {
+                loadedCount++;
+                if (loadedCount === totalImages) {
+                    setImagesLoaded(true);
+                }
+            };
+            img.onerror = () => {
+                // Even if error, count it so we don't hang
+                loadedCount++;
+                if (loadedCount === totalImages) setImagesLoaded(true);
+            };
         });
-    }, []);
+    }, [heroImages]);
 
-    // Slideshow effect - reduced to 4s (0.5s less than 4.5s)
+    // Slideshow effect
     useEffect(() => {
+        if (!imagesLoaded) return;
         const interval = setInterval(() => {
             setCurrentImageIndex((prev) => (prev + 1) % heroImages.length);
         }, 4000);
         return () => clearInterval(interval);
-    }, []);
+    }, [imagesLoaded, heroImages.length]);
 
     // Show button after cinematic reveal
     useEffect(() => {
