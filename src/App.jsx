@@ -519,7 +519,7 @@ function HeroScreen({ onEnter }) {
                     A special message,<br />just for you
                 </CinematicText>
 
-                <div style={{ marginTop: '-60px', height: '80px', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', position: 'relative' }}>
+                <div style={{ marginTop: '-50px', height: '80px', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', position: 'relative' }}>
                     <motion.button
                         id="enter-btn"
                         className={`enter-button`}
