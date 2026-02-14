@@ -99,7 +99,3 @@ Features a pulsing red SVG heart with the signature:
 > "Made with love, from Bubby"
 
 ---
-
-**Note**: Make sure all assets are in their correct folders before running. The paths are already configured to match your existing structure.
-
-Enjoy! 💕🦋
