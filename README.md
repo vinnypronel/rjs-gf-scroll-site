@@ -19,23 +19,7 @@ An interactive, animated birthday website with smooth scrolling, parallax effect
 The site was deployed through Vercel. Open your browser and navigate to:
 
 https://mi-vida-birthday.vercel.app/
-
-## Project Structure
-
-```
-rj-gf-bday/
-├── src/
-│   ├── App.jsx          # Main application with all components
-│   ├── main.jsx         # React entry point
-│   └── index.css        # All styles and animations
-├── images/              # All photo assets
-├── vids/               # Video file
-├── background-audio/   # Background music
-├── index.html          # HTML entry point
-├── vite.config.js      # Vite configuration
-└── package.json        # Dependencies and scripts
-```
-
+ 
 ## Design Features
 
 ### Animations
